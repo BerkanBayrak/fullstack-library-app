@@ -245,16 +245,23 @@ namespace LibraryApi.Controllers
                 .Include(s => s.Books)
                 .ToListAsync();
 
+            // Track used width locally to avoid recomputing from DB state
+            var shelfUsage = shelves.ToDictionary(
+                s => s.Id,
+                s => s.Books.Sum(b => b.Width)
+            );
+
             foreach (var book in depotBooks)
             {
                 var shelf = shelves.FirstOrDefault(s =>
                     book.Height <= s.Height &&
-                    s.Books.Sum(b => b.Width) + book.Width <= s.Width);
+                    shelfUsage[s.Id] + book.Width <= s.Width);
 
                 if (shelf != null)
                 {
                     book.ShelfId = shelf.Id;
                     book.Status = BookStatus.OnShelf;
+                    shelfUsage[shelf.Id] += book.Width; // update usage immediately
                 }
             }
 

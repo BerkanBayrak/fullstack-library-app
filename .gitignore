@@ -1,0 +1,19 @@
+# Ignore .NET build files
+bin/
+obj/
+*.db
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore VSCode settings
+.vscode/
+
+# Ignore logs
+*.log
+
+
+# Ignore system files
+.DS_Store
+Thumbs.db
