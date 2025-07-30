@@ -157,3 +157,4 @@ C:\Users\berka\VirtualLibrary\LibraryApi\obj\Debug\net9.0\ref\LibraryApi.dll
 C:\Users\berka\VirtualLibrary\LibraryApi\bin\Debug\net9.0\library-frontend\package-lock.json
 C:\Users\berka\VirtualLibrary\LibraryApi\bin\Debug\net9.0\library-frontend\package.json
 C:\Users\berka\VirtualLibrary\LibraryApi\bin\Debug\net9.0\library-frontend\public\manifest.json
+C:\Users\berka\VirtualLibrary\LibraryApi\obj\Debug\net9.0\LibraryApi.sourcelink.json
