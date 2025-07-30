@@ -1,0 +1,105 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === Bookshelf Layout === */
+.bookshelf-container {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* === Bookshelf Box === */
+.bookshelf-column {
+  border: 2px solid #ccc;
+  padding: 15px 20px;
+  border-radius: 12px;
+  width: 350px;
+  background: linear-gradient(to bottom, #f1e0c8, #c49e6d);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.bookshelf-column:hover {
+  transform: scale(1.01);
+}
+
+.bookshelf-column h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: #4a3820;
+  font-weight: bold;
+}
+
+/* === Shelf Styles === */
+.shelf-row {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background-color: #fff9f0;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.shelf-row:hover {
+  background-color: #f4eee4;
+}
+
+.shelf-info {
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.shelf-bar {
+  height: 20px;
+  background: #eee;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.shelf-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 4px 0 0 4px;
+}
