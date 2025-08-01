@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
+import QRScannerModal from './QRScannerModal';
+
+
 
 
 const modalStyle = {
@@ -174,6 +177,8 @@ function App() {
   const [depotBooks, setDepotBooks] = useState([]);
   const [activeShelf, setActiveShelf] = useState(null);
   const [borrowedBooks, setBorrowedBooks] = useState([]);
+  const [showQRModal, setShowQRModal] = useState(false);
+
   
   const [showSearchModal, setShowSearchModal] = useState(false);
 
@@ -257,6 +262,7 @@ function App() {
         <button onClick={() => setShowAddBookModal(true)} style={{ marginLeft: '10px' }}>📖 Add Book</button>
         <button onClick={() => setShowAutoPlaceBookModal(true)} style={{ marginLeft: '10px' }}>🤖 Auto Place Book</button>
         <button onClick={() => setShowSearchModal(true)} style={{ marginLeft: '10px' }}>🔍 Search Book</button>
+        <button onClick={() => setShowQRModal(true)} style={{ marginLeft: '10px' }}>📷 Scan QR Code</button>
 
       </div>
 
@@ -366,6 +372,17 @@ function App() {
         </div>
       )}
 
+      {showQRModal && (
+        <QRScannerModal
+          key="scanner" // ensures remount
+          onClose={() => setShowQRModal(false)}
+          onSuccess={fetchData}
+        />
+      )}
+
+
+
+
       {showRemoveModal && (
         <div style={modalStyle}>
           <h3>Remove Bookshelf</h3>
@@ -420,7 +437,9 @@ function App() {
 
                       <button onClick={() => {
                         if (window.confirm(`Are you sure you want to remove "${book.title}"?`)) {
-                          fetch(`http://localhost:5243/api/Library/RemoveBookByTitle?title=${book.title}`, {
+                          console.log("Trying to remove book with ID:", book.id, book);
+
+                          fetch(`http://localhost:5243/api/Library/RemoveBookById?id=${book.id}`, {
                             method: 'DELETE'
                           }).then(() => {
                             setActiveShelf(null);

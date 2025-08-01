@@ -127,19 +127,16 @@ namespace LibraryApi.Controllers
 
             return Ok(shelf.Books);
         }
-        [HttpDelete("RemoveBookByTitle")]
-        public async Task<IActionResult> RemoveBookByTitle(string title)
+        [HttpDelete("RemoveBookById")]
+        public IActionResult RemoveBookById(int id)
         {
-            var book = await _context.Books
-                .FirstOrDefaultAsync(b => b.Title == title && b.Status != BookStatus.Borrowed);
-
+            var book = _context.Books.FirstOrDefault(b => b.Id == id);
             if (book == null)
-                return NotFound("Book not found or currently borrowed.");
+                return NotFound("Book not found");
 
             _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
-
-            return Ok($"Removed book: {book.Title}");
+            _context.SaveChanges();
+            return Ok();
         }
 
 
@@ -289,6 +286,7 @@ namespace LibraryApi.Controllers
                     Width = sh.Width,
                     Books = sh.Books.Select(b => new BookDto
                     {
+                        Id = b.Id, // ✅ THIS LINE IS MISSING
                         Title = b.Title,
                         Width = b.Width,
                         Height = b.Height,
