@@ -57,14 +57,14 @@ export default function QRScannerModal({ onClose, onSuccess }) {
   };
 
   useEffect(() => {
-    fetch('http://localhost:5243/api/Library/Bookshelves')
+    fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/Bookshelves')
       .then(res => res.json())
       .then(setBookshelves)
       .catch(console.error);
   }, []);
 
   const handleAddDepot = () => {
-    fetch('http://localhost:5243/api/Library/AddBook', {
+    fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/AddBook', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...scannedBook, label: "", position: null })
@@ -75,7 +75,7 @@ export default function QRScannerModal({ onClose, onSuccess }) {
   };
 
   const handleAutoPlace = () => {
-    fetch('http://localhost:5243/api/Library/AutoPlaceBook', {
+    fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/AutoPlaceBook', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(scannedBook)
@@ -86,7 +86,7 @@ export default function QRScannerModal({ onClose, onSuccess }) {
   };
 
   const handleManualAdd = () => {
-    fetch('http://localhost:5243/api/Library/AddBook', {
+    fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/AddBook', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -29,7 +29,7 @@ function AddBookModal({ onClose, onAdd, autoPlace = false }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5243/api/Library/Bookshelves')
+    fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/Bookshelves')
       .then(res => res.json())
       .then(setBookshelves)
       .catch(console.error);
@@ -38,8 +38,8 @@ function AddBookModal({ onClose, onAdd, autoPlace = false }) {
   const handleAdd = () => {
     setError('');
     const url = autoPlace
-      ? 'http://localhost:5243/api/Library/AutoPlaceBook'
-      : 'http://localhost:5243/api/Library/AddBook';
+      ? 'https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/AutoPlaceBook'
+      : 'https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/AddBook';
 
     const requestBody = {
       ...book,
@@ -123,7 +123,7 @@ function SearchBookModal({ onClose }) {
   const handleSearch = () => {
     const query = new URLSearchParams({ title, author, genre }).toString();
 
-    fetch(`http://localhost:5243/api/Library/SearchBooks?${query}`)
+    fetch(`https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/SearchBooks?${query}`)
       .then(res => {
         if (!res.ok) throw new Error('Search failed');
         return res.json();
@@ -188,17 +188,17 @@ function App() {
   }, []);
 
   const fetchData = () => {
-    fetch('http://localhost:5243/api/Library/Bookshelves')
+    fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/Bookshelves')
       .then(res => res.json())
       .then(setBookshelves)
       .catch(console.error);
 
-    fetch('http://localhost:5243/api/Library/DepotBooks')
+    fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/DepotBooks')
       .then(res => res.json())
       .then(setDepotBooks)
       .catch(console.error);
 
-    fetch('http://localhost:5243/api/Library/AllBooks')
+    fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/AllBooks')
       .then(res => res.json())
       .then(data => {
         const borrowed = data.filter(b => b.status?.toLowerCase() === 'borrowed');
@@ -220,7 +220,7 @@ function App() {
   };
 
   const handleAddShelf = () => {
-    fetch('http://localhost:5243/api/Library/AddBookshelf', {
+    fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/AddBookshelf', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -238,7 +238,7 @@ function App() {
   };
 
   const handleRemoveShelf = () => {
-    fetch(`http://localhost:5243/api/Library/RemoveBookshelf?label=${removeLabel}`, {
+    fetch(`https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/RemoveBookshelf?label=${removeLabel}`, {
       method: 'DELETE'
     })
       .then(() => {
@@ -298,7 +298,7 @@ function App() {
       <div style={{ marginTop: '40px' }}>
         <h2>🗃️ Depot</h2>
         <button onClick={() => {
-          fetch('http://localhost:5243/api/Library/AutoPlaceDepotBooks', { method: 'POST' })
+          fetch('https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/AutoPlaceDepotBooks', { method: 'POST' })
             .then(fetchData)
             .catch(console.error);
         }}>🛠️ Auto-Place All Depot Books</button>
@@ -324,7 +324,7 @@ function App() {
                   <button
                     style={{ marginLeft: '10px' }}
                     onClick={() => {
-                      fetch(`http://localhost:5243/api/Library/ReturnBook?title=${encodeURIComponent(book.title)}&borrowerId=${encodeURIComponent(book.borrowerId)}`, {
+                      fetch(`https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/ReturnBook?title=${encodeURIComponent(book.title)}&borrowerId=${encodeURIComponent(book.borrowerId)}`, {
                         method: 'POST'
                       })
                       .then(fetchData)
@@ -402,7 +402,7 @@ function App() {
                     {book.title} by {book.author}
                     <div style={{ marginTop: '5px' }}>
                       <button onClick={() => {
-                        fetch(`http://localhost:5243/api/Library/MoveBookByTitle?title=${book.title}`, {
+                        fetch(`https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/MoveBookByTitle?title=${book.title}`, {
                           method: 'POST'
                         }).then(() => {
                           setActiveShelf(null);
@@ -413,7 +413,7 @@ function App() {
                       <button onClick={() => {
                         const borrowerId = prompt("Enter Borrower ID:");
                         if (borrowerId) {
-                          fetch(`http://localhost:5243/api/Library/BorrowBook?title=${book.title}&borrowerId=${borrowerId}`, {
+                          fetch(`https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/BorrowBook?title=${book.title}&borrowerId=${borrowerId}`, {
                             method: 'POST'
                           }).then(() => {
                             setActiveShelf(null);
@@ -426,7 +426,7 @@ function App() {
                         const label = prompt("Enter target bookshelf label:");
                         const position = prompt("Enter target shelf position:");
                         if (label && position) {
-                          fetch(`http://localhost:5243/api/Library/MoveBookByTitle?title=${book.title}&label=${label}&position=${position}`, {
+                          fetch(`https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/MoveBookByTitle?title=${book.title}&label=${label}&position=${position}`, {
                             method: 'POST'
                           }).then(() => {
                             setActiveShelf(null);
@@ -439,7 +439,7 @@ function App() {
                         if (window.confirm(`Are you sure you want to remove "${book.title}"?`)) {
                           console.log("Trying to remove book with ID:", book.id, book);
 
-                          fetch(`http://localhost:5243/api/Library/RemoveBookById?id=${book.id}`, {
+                          fetch(`https://cloudlibrary-backend-585774735601.us-central1.run.app/api/Library/RemoveBookById?id=${book.id}`, {
                             method: 'DELETE'
                           }).then(() => {
                             setActiveShelf(null);
