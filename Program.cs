@@ -1,52 +1,75 @@
 using LibraryApi.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Enable CORS to allow frontend access (e.g., from React on localhost:3000)
+// CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        if (builder.Environment.IsDevelopment())
+            policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+        else
+            policy.WithOrigins("https://lively-wonder-463006-q6.web.app")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+    });
 });
 
-// Add controllers and configure JSON serialization for enums as strings
+// Controllers + enum as string + camelCase
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     });
 
-// Register EF Core with SQLite
-builder.Services.AddDbContext<LibraryDbContext>(options =>
-    options.UseSqlite("Data Source=library.db"));
+// ---------- Database (MySQL if env var set, else SQLite) ----------
+var conn = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+if (!string.IsNullOrWhiteSpace(conn))
+{
+    // Oracle provider
+    builder.Services.AddDbContext<LibraryDbContext>(
+        opts => opts.UseMySQL(conn));
+}
+else
+{
+    var dbPath = builder.Environment.IsDevelopment() ? "library.db" : "/tmp/library.db";
+    builder.Services.AddDbContext<LibraryDbContext>(
+        opts => opts.UseSqlite($"Data Source={dbPath}"));
+}
 
-// Enable Swagger/OpenAPI
+// -------------------------------------------------------------------
+
+// Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Use CORS *after* building the app and *before* routing
-app.UseCors("AllowAll");
+// CORS before routing
+app.UseCors("AllowFrontend");
 
-// Enable Swagger in development
+// Swagger only in dev
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Other middlewares
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
-// Route controllers
-app.MapControllers();
+// Ensure DB exists (switch to Migrate() when you add EF migrations)
+using (var scope = app.Services.CreateScope())
+{
+    var ctx = scope.ServiceProvider.GetRequiredService<LibraryDbContext>();
+    ctx.Database.EnsureCreated();
+}
 
-// Start the app
+app.MapControllers();
+app.MapGet("/", () => Results.Content("<h1>📚 Library API is running</h1>", "text/html"));
 app.Run();
